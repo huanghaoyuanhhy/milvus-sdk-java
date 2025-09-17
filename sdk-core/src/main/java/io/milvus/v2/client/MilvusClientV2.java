@@ -25,6 +25,8 @@ import io.milvus.orm.iterator.QueryIterator;
 import io.milvus.orm.iterator.SearchIterator;
 import io.milvus.orm.iterator.SearchIteratorV2;
 
+import io.milvus.v2.service.cdc.CDCService;
+import io.milvus.v2.service.cdc.request.UpdateReplicateConfigurationReq;
 import io.milvus.v2.service.database.DatabaseService;
 import io.milvus.v2.service.database.request.*;
 import io.milvus.v2.service.database.response.*;
@@ -74,6 +76,7 @@ public class MilvusClientV2 {
     private final RBACService rbacService = new RBACService();
     private final ResourceGroupService rgroupService = new ResourceGroupService();
     private final UtilityService utilityService = new UtilityService();
+    private final CDCService cdcService = new CDCService();
     private RpcUtils rpcUtils = new RpcUtils();
     private ConnectConfig connectConfig;
 
@@ -1041,6 +1044,10 @@ public class MilvusClientV2 {
      */
     public CheckHealthResp checkHealth() {
         return rpcUtils.retry(()->utilityService.checkHealth(this.getRpcStub()));
+    }
+
+    public void updateReplicateConfiguration(UpdateReplicateConfigurationReq request) {
+        rpcUtils.retry(()->cdcService.updateReplicateConfiguration(this.getRpcStub(), request));
     }
 
     /**
